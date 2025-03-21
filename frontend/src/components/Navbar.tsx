@@ -30,8 +30,8 @@ export const Navbar = () => {
                 ))}
             </div>
             <div className="flex space-x-8">
-                <img src="/search_icon.png" alt="" />
-                <img src="/basket_icon.png" alt="" />
+                <img className="h-8 w-8" src="/search_icon.png" alt="" />
+                <img className="h-8 w-8" src="/basket_icon.png" alt="" />
                 <button className="border border-red-300 rounded-4xl px-4 py-2 hover:bg-red-50">Sign In</button>
             </div>
             
