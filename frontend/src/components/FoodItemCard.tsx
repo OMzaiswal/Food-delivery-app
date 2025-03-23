@@ -32,12 +32,12 @@ export const FoodItemCard = ({ foodDetails }: { foodDetails: FoodDetails } ) => 
     }
 
     return (
-        <div className="rounded-2xl shadow-md bg-white w-64 max-w-sm">
+        <div className="rounded-2xl shadow-md bg-white w-80 max-w-sm">
             <div className="relative">
                 <img 
                     src={foodDetails.image} 
                     alt={foodDetails.name} 
-                    className="w-64 h-48 rounded-t-2xl object-cover"/>
+                    className="w-80 h-64 rounded-t-2xl object-cover"/>
                 { !itemCount ? (
                     <img 
                         src={assets.add_icon_white} 
