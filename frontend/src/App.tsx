@@ -5,6 +5,7 @@ import { Home } from './pages/Home'
 import { Cart } from './pages/Cart'
 import { PlaceOrder } from './pages/PlaceOrder'
 import { Footer } from './components/Footer'
+import { LoginPopup } from './components/LoginPopup'
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className='main-container'>
+        <LoginPopup />
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />}></Route>

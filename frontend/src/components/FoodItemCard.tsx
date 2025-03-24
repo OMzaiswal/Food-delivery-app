@@ -32,7 +32,7 @@ export const FoodItemCard = ({ foodDetails }: { foodDetails: FoodDetails } ) => 
     }
 
     return (
-        <div className="rounded-2xl shadow-md bg-white w-80 max-w-sm">
+        <div className="rounded-2xl shadow-md bg-white w-80 max-w-sm hover:scale-105">
             <div className="relative">
                 <img 
                     src={foodDetails.image} 

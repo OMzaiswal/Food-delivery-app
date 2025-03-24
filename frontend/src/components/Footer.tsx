@@ -1,10 +1,12 @@
 import { assets } from "../assets/assets"
+import { AppDownload } from "./AppDownload"
 
 export const Footer = () => {
 
     return (
-        <div className="bg-gray-600 text-white w-full py-16 mt-2">
-            <div className="max-w-[1440px] mx-auto px-4 grid grid-cols-4 gap-6">
+        <div className="bg-gray-700 text-white w-full py-16 mt-4">
+            <AppDownload />
+            <div className="max-w-[1440px] mx-auto px-4 grid grid-cols-4 gap-6 mb-4">
                 <div className="col-span-2 space-y-2">
                     <p className="text-3xl font-extrabold text-red-400">HungerBox</p>
                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore et velit recusandae aut, illum dolores, ipsam hic necessitatibus laborum repudiandae dolore alias asperiores. Facere sit aliquid magni? Mollitia, eligendi accusantium.</p>
@@ -23,7 +25,7 @@ export const Footer = () => {
                         <li>Privacy Policy</li>
                     </ul>
                 </div>
-                <div className="">
+                <div id="contact-us">
                     <h2 className="text-lg font-semibold pb-1">GET IN TOUCH</h2>
                     <ul>
                         <li>+91-212-546-9708</li>
@@ -31,6 +33,7 @@ export const Footer = () => {
                     </ul>
                 </div>
             </div>
+            <p className="text-center">Copyright 2025 &#169; HungerBox.com - All Right Reserved</p>
          </div>
     )
 }
