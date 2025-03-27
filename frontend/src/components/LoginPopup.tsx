@@ -65,8 +65,8 @@ export const LoginPopup = () => {
                 <p className="text-sm text-center mt-3 text-gray-600">
                     {currentState === 'Log in' ? (
                         <>
-                            New here <span onClick={() => setCurrentState('Sign up')} className="text-red-500 cursor-pointer ml-1 hover:underline">
-                            Create an account
+                            Create a new account<span onClick={() => setCurrentState('Sign up')} className="text-red-500 cursor-pointer ml-1 hover:underline">
+                            Click here
                             </span>
                         </>
                     ) : (

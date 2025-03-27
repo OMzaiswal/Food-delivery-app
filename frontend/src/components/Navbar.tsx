@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { useSetRecoilState } from "recoil";
 import { showLoginPopup } from "../store/showLoginPopup";
@@ -13,6 +13,7 @@ export const Navbar = () => {
     ]
 
     const setLoginPopupState = useSetRecoilState(showLoginPopup);
+    const navigate = useNavigate();
 
     return (
         <div className="flex justify-between items-center">
@@ -32,7 +33,12 @@ export const Navbar = () => {
             </div>
             <div className="flex space-x-8">
                 <img className="h-8 w-8" src="/search_icon.png" alt="" />
-                <img className="h-8 w-8" src="/basket_icon.png" alt="" />
+                <img 
+                    className="h-8 w-8" 
+                    src="/basket_icon.png" 
+                    alt="cart" 
+                    onClick={() => navigate('/cart')}
+                    />
                 <button 
                     className="border border-red-300 rounded-4xl px-4 py-2 hover:bg-red-50"
                     onClick={() => setLoginPopupState(true)}
