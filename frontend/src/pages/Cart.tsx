@@ -1,11 +1,13 @@
 import { useRecoilState } from "recoil"
 import { cartState } from "../store/cartState"
 import { assets, food_list } from "../assets/assets";
+import { useNavigate } from "react-router-dom";
 
 export const Cart = () => {
 
     const [cartItems, setCartItems] = useRecoilState(cartState);
     let subtotal = 0;
+    const navigate = useNavigate();
 
     const handleQuantityChange = (id: string, change: number) => {
         setCartItems((prev) => {
@@ -95,7 +97,9 @@ export const Cart = () => {
                     <b>Total</b>
                     <b>${subtotal + 2}</b>
                 </div>
-                <button className="p-2 bg-orange-400 rounded-md text-white mt-2">PROCEED TO CHECKOUT</button>
+                <button className="px-8 py-3 bg-orange-500 rounded-md text-white mt-2 hover:scale-105"
+                    onClick={() => navigate('/order')}
+                >PROCEED TO CHECKOUT</button>
             </div>
             <div className="my-2">
                 <p className="text-lg">If you have a promo code, Enter it here</p>

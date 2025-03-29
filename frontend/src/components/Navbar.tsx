@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { showLoginPopup } from "../store/showLoginPopup";
+import { cartState } from "../store/cartState";
 
 export const Navbar = () => {
 
@@ -14,6 +15,9 @@ export const Navbar = () => {
 
     const setLoginPopupState = useSetRecoilState(showLoginPopup);
     const navigate = useNavigate();
+    const cartItems = useRecoilValue(cartState);
+
+    const totalCartItems = Object.values(cartItems).reduce((total, quantity) => total+quantity, 0);
 
     return (
         <div className="flex justify-between items-center">
@@ -33,12 +37,19 @@ export const Navbar = () => {
             </div>
             <div className="flex space-x-8">
                 <img className="h-8 w-8" src="/search_icon.png" alt="" />
-                <img 
-                    className="h-8 w-8" 
-                    src="/basket_icon.png" 
-                    alt="cart" 
-                    onClick={() => navigate('/cart')}
-                    />
+                <div className="relative cursor-pointer" onClick={() => navigate('/cart')}>
+                    <img 
+                        className="h-8 w-8" 
+                        src="/basket_icon.png" 
+                        alt="cart" 
+                        onClick={() => navigate('/cart')}
+                        />
+                        {totalCartItems > 0 && (
+                            <span className="absolute -top-2 -right-2 px-2 py-0.5 text-white bg-red-600 rounded-full font-bold text-sm">
+                                { totalCartItems }
+                            </span>
+                        )}
+                </div>
                 <button 
                     className="border border-red-300 rounded-4xl px-4 py-2 hover:bg-red-50"
                     onClick={() => setLoginPopupState(true)}
