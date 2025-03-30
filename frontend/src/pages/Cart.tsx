@@ -1,11 +1,13 @@
-import { useRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { cartState } from "../store/cartState"
 import { assets, food_list } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
+import { cartSubtotal } from "../store/cartSubtotal";
 
 export const Cart = () => {
 
     const [cartItems, setCartItems] = useRecoilState(cartState);
+    const setCartSubtotal = useSetRecoilState(cartSubtotal);
     let subtotal = 0;
     const navigate = useNavigate();
 
@@ -76,7 +78,6 @@ export const Cart = () => {
                 )
             })}
         </div>
-
         <h2 className="text-2xl font-bold mt-12 mb-3">Cart Total</h2>
         <div className="flex flex-col-reverse md:grid md:grid-cols-2 md:space-x-12">
             <div className="space-y-1">
@@ -86,7 +87,7 @@ export const Cart = () => {
                 </div>
                 <div className="flex justify-between text-lg text-gray-500">
                     <p>Delivery Fee</p>
-                    <p>$2</p>
+                    <p>${subtotal > 0 ? 2 : 0}</p>
                 </div>
                 <div className="flex justify-between text-lg text-gray-500">
                     <p>Promo Discount</p>
@@ -95,10 +96,13 @@ export const Cart = () => {
                 <hr className="text-gray-400"/>
                 <div className="flex justify-between text-lg text-gray-500">
                     <b>Total</b>
-                    <b>${subtotal + 2}</b>
+                    <b>${subtotal > 0 ? (subtotal + 2) : 0}</b>
                 </div>
                 <button className="px-8 py-3 bg-orange-500 rounded-md text-white mt-2 hover:scale-105"
-                    onClick={() => navigate('/order')}
+                    onClick={() => {
+                        setCartSubtotal(subtotal);
+                        navigate('/order')
+                    }}
                 >PROCEED TO CHECKOUT</button>
             </div>
             <div className="my-2">
