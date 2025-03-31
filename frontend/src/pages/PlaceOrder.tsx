@@ -5,20 +5,24 @@ export const PlaceOrder = () => {
 
     const subtotal = useRecoilValue(cartSubtotal);
 
-    return <div className="flex justify-between space-x-8">
-        <div className="w-full">
+    return <div className="flex flex-col md:flex-row justify-between space-y-8 md:space-y-0 md:space-x-12 p-4">
+        <div className="w-full md:w-1/2">
             <h2 className="text-2xl font-bold mt-12 mb-3">Delivery Information</h2>
-            <div className="grid grid-cols-2">
-                <input type="text" placeholder="First name" className="py-2 border border-gray-300 rounded-sm col-span-1"/>
-                <input type="text" placeholder="Last name" className="py-2 px-2 border border-gray-300 rounded-sm col-span-1"/>
-                <input type="text" placeholder="Email address" className="py-2 px-4 border border-gray-300 rounded-sm col-span-2" />
-            </div>
-            
+            <form className="grid grid-cols-2 [&>input]:p-3 [&>input]:border [&>input]:border-gray-300 [&>input]:rounded-md space-x-4 space-y-4">
+                <input type="text" placeholder="First name" />
+                <input type="text" placeholder="Last name" />
+                <input type="text" placeholder="Email address" className="col-span-2" />
+                <input type="text" placeholder="Street" className="col-span-2" />
+                <input type="text" placeholder="City" />
+                <input type="text" placeholder="State" />
+                <input type="text" placeholder="Zip code" />
+                <input type="text" placeholder="Country" />
+                <input type="text" placeholder="Phone Number" className="col-span-2" />
+            </form>
         </div>
-        <div className="w-full">
-        <h2 className="text-2xl font-bold mt-12 mb-3">Cart Total</h2>
-        <div className="flex flex-col-reverse md:grid md:grid-cols-2 md:space-x-12">
-            <div className="space-y-1">
+        <div className="w-full md:w-1/2 p-4 mt-8">
+        <h2 className="text-2xl font-bold mb-4">Cart Total</h2>
+            <div className="space-y-4">
                 <div className="flex justify-between text-lg text-gray-500">
                     <p>Subtotal</p>
                     <p>${subtotal}</p>
@@ -40,7 +44,6 @@ export const PlaceOrder = () => {
                     onClick={() => {}}
                 >PROCEED TO PAYMENT</button>
             </div>
-        </div>
     </div>
     </div>
 }
