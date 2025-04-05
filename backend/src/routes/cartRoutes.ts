@@ -116,7 +116,51 @@ router.put('/update', async (req, res) => {
     } catch(err) {
         console.log(err);
         res.status(500).json({message: 'Faied to update the item'});
+        return;
     }
 })
 
+//  Remove item  from cart 
+router.delete('/remove/:foodItemId', async (req, res) => {
+    const userId = req.user?.id;
+    const { foodItemId } = req.params;
+
+    try {
+        const cart = await prisma.cart.findUnique({ where: { userId }});
+        if(!cart) {
+            res.status(404).json({message: "Cart not found"});
+            return;
+        }
+
+        await prisma.cartItem.deleteMany({
+            where: { cartId: cart.id, foodItemId }
+        })
+        res.json({message: "Item removed from cart"});
+        return;
+    } catch(err) {
+        res.status(500).json({error: "Failed to remove item"});
+        return;
+    }
+})
+
+
+// Clear cart
+router.delete('removeCart', async (req, res) => {
+    const userId = req.user?.id;
+
+    try {
+        const cart = await prisma.cart.findUnique({ where: { userId }});
+        if (!cart) {
+            res.status(404).json({error: 'Cart not found'});
+            return;
+        }
+
+        await prisma.cartItem.deleteMany({ where: { cartId: cart.id }});
+        res.json({message: "Cart cleared"});
+        return;
+    } catch(err) {
+        res.status(500).json({error: "Failed to clear cart"});
+        return;
+    }
+})
 export default router;
