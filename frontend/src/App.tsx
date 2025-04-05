@@ -6,6 +6,7 @@ import { Cart } from './pages/Cart'
 import { PlaceOrder } from './pages/PlaceOrder'
 import { Footer } from './components/Footer'
 import { LoginPopup } from './components/LoginPopup'
+import { Admin } from './pages/Admin'
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path='/' element={<Home />}></Route>
           <Route path='/cart' element={<Cart />}></Route>
           <Route path='/order' element={<PlaceOrder />}></Route>
+          <Route path='/admin' element={<Admin />}></Route>
         </Routes>
       </div>
       <div className='full-width'>
