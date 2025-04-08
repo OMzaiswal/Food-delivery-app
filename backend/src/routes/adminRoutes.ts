@@ -30,6 +30,9 @@ router.post('/add-food', upload.single('image'), async (req, res) => {
         blobStream.end(file.buffer);
 
         blobStream.on('finish', async() => {
+
+            await blob.makePublic();
+            
             const imageUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
 
             const food = await prisma.foodItem.create({

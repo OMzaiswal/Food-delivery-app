@@ -34,6 +34,7 @@ router.post('/add-food', upload.single('image'), (req, res) => __awaiter(void 0,
         });
         blobStream.end(file.buffer);
         blobStream.on('finish', () => __awaiter(void 0, void 0, void 0, function* () {
+            yield blob.makePublic();
             const imageUrl = `https://storage.googleapis.com/${firebase_1.bucket.name}/${blob.name}`;
             const food = yield prismaClient_1.default.foodItem.create({
                 data: {
