@@ -44,11 +44,11 @@ export const ListItems = () => {
             </div>
             <div>
                 { foodList.map((food) => (
-                    <div key={food.id} className="grid grid-cols-5 gap-4 border border-gray-300 rounded-sm px-3 py-3 text-center">
+                    <div key={food.id} className="grid grid-cols-5 gap-4 border border-gray-300 rounded-sm px-3 py-3 text-center text-lg items-center">
                         <img 
                             src={food.imageUrl} 
                             alt="Image" 
-                            className="h-12 w-12 object-cover rounded-full mx-auto"
+                            className="h-16 w-16 object-cover rounded-full mx-auto"
                             />
                         <p>{food.name}</p>
                         <p>{food.category}</p>
