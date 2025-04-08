@@ -2,7 +2,7 @@ import express from "express";
 import multer from 'multer';
 import { authenticate, AuthorizeAdmin } from "../middlewares/authMiddleware";
 import { bucket } from "../config/firebase";
-import { prisma } from "../config/database";
+import prisma from "../lib/prismaClient";
 
 
 
@@ -45,7 +45,7 @@ router.post('/add-food', upload.single('image'), async (req, res) => {
         });
 
         blobStream.on('error', (err) => {
-            res.status(500).json({error: "Upload failed", details: err.message });
+            res.status(500).json({message: "Upload failed", details: err.message });
         });
     } catch(err) {
         res.status(500).json({ error: "Something went wrong", details: err });

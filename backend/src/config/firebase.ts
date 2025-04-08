@@ -4,7 +4,7 @@ import { getStorage } from 'firebase-admin/storage';
 import * as admin from 'firebase-admin';
 import * as path from 'path';
 
-const serviceAccount = require(path.resolve(__dirname, '../food-delivery-app-serviceAccountKey.json'));
+const serviceAccount = require(path.resolve(__dirname, 'food-delivery-app-serviceAccountKey.json'));
 
 initializeApp({
   credential: cert(serviceAccount),

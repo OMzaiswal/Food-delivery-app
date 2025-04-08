@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticate, AuthorizeUser } from "../middlewares/authMiddleware";
-import { prisma } from "../config/database";
+import prisma from "../lib/prismaClient";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 

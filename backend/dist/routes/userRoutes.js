@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const authMiddleware_1 = require("../middlewares/authMiddleware");
-const database_1 = require("../config/database");
+const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const router = (0, express_1.Router)();
@@ -29,7 +29,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return;
     }
     try {
-        const user = yield database_1.prisma.user.findUnique({
+        const user = yield prismaClient_1.default.user.findUnique({
             where: {
                 email
             }
@@ -67,7 +67,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
         return;
     }
     try {
-        const existingUser = yield database_1.prisma.user.findUnique({
+        const existingUser = yield prismaClient_1.default.user.findUnique({
             where: {
                 email
             }
@@ -77,7 +77,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
             return;
         }
         const hashedPassword = yield bcrypt_1.default.hash(password, 10);
-        const newUser = yield database_1.prisma.user.create({
+        const newUser = yield prismaClient_1.default.user.create({
             data: { fullName, email, password: hashedPassword, role }
         });
         const token = jsonwebtoken_1.default.sign({ id: newUser.id, role: newUser.role }, SECRET_KEY, { expiresIn: '7d' });
