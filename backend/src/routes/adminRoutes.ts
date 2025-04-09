@@ -3,6 +3,7 @@ import multer from 'multer';
 import { authenticate, AuthorizeAdmin } from "../middlewares/authMiddleware";
 import { bucket } from "../config/firebase";
 import prisma from "../lib/prismaClient";
+import { json } from "body-parser";
 
 
 
@@ -101,6 +102,34 @@ router.patch('/order/:orderId/status', async (req, res) => {
 
     } catch (err) {
         res.status(500).json({message: "Failed to update order status"});
+        return;
+    }
+})
+
+router.get('/order/:orderId', async (req, res) => {
+    const { orderId } = req.params;
+    try {
+        const order = await prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                user: true,
+                items: {
+                    include: {
+                        foodItem: true
+                    }
+                },
+                payment: true,
+                delivery: true
+            }
+        })
+
+        if (!order) {
+            res.status(404).json({ messsage: "Order not found"});
+            return;
+        }
+        res.status(200).json(order)
+    } catch(err) {
+        res.status(500).json({ json: "Failed to fetch the details" });
         return;
     }
 })
