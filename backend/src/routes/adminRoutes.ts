@@ -59,6 +59,26 @@ router.post('/add-food', upload.single('image'), async (req, res) => {
     }
 });
 
+router.delete('/food/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const existingFood = await prisma.foodItem.findUnique({ where: { id } });
+        if (!existingFood) {
+            res.status(404).json({ message: "Food item does not exists"});
+            return;
+        }
+        await prisma.foodItem.delete({
+            where: { id }
+        })
+
+        res.status(200).json({ message: "Food item deleted successfully" });
+        return;
+    } catch (err) {
+        res.status(500).json({ message: "Failed to delete food item "});
+        return;
+    }
+})
+
 
 
 router.get('/orders', async (req, res) => {

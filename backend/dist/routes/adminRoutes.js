@@ -57,6 +57,25 @@ router.post('/add-food', upload.single('image'), (req, res) => __awaiter(void 0,
         return;
     }
 }));
+router.delete('/food/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const existingFood = yield prismaClient_1.default.foodItem.findUnique({ where: { id } });
+        if (!existingFood) {
+            res.status(404).json({ message: "Food item does not exists" });
+            return;
+        }
+        yield prismaClient_1.default.foodItem.delete({
+            where: { id }
+        });
+        res.status(200).json({ message: "Food item deleted successfully" });
+        return;
+    }
+    catch (err) {
+        res.status(500).json({ message: "Failed to delete food item " });
+        return;
+    }
+}));
 router.get('/orders', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const orders = yield prismaClient_1.default.order.findMany({
