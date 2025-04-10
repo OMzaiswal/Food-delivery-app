@@ -31,6 +31,20 @@ export const ListItems = () => {
         fetchdata();
     }, [])
 
+    const handleDelete = async ( id: string ) => {
+        try {
+            const res = await api.delete(`/admin/food/${id}`);
+            if(res.status === 200) {
+                toast.success('Food item deleted successfully');
+                setFoodList((prev) => prev.filter((item) => item.id !== id));
+            } else {
+                toast.warn('Unable to delete, try again!!!');
+            }
+        } catch (err) {
+            toast.error('Failed to delete!');
+        }
+    }
+
 
     return <div className="mt-10">
         <h1 className="text-2xl text-gray-700 mb-4">All Foods List</h1>
@@ -53,7 +67,12 @@ export const ListItems = () => {
                         <p>{food.name}</p>
                         <p>{food.category}</p>
                         <p>{food.price}</p>
-                        <button className="hover:text-red-400 hover:scale-120">Delete</button>
+                        <button 
+                            className="hover:text-red-400 hover:scale-120"
+                            onClick={() => handleDelete(food.id)}
+                        >
+                            Delete
+                        </button>
                     </div>
                 ))}
             </div>
