@@ -62,7 +62,9 @@ router.post('/add', async (req, res) => {
         if (existingItem) {
             const updatedItem = await prisma.cartItem.update({
                 where: { id: existingItem.id },
-                data: { quantity: existingItem.quantity + quantity }
+                data: { quantity: {
+                            increment: quantity
+                } }
             })
             res.json(updatedItem);
             return;
@@ -145,7 +147,7 @@ router.delete('/remove/:foodItemId', async (req, res) => {
 
 
 // Clear cart
-router.delete('removeCart', async (req, res) => {
+router.delete('/removeCart', async (req, res) => {
     const userId = req.user?.id;
 
     try {
