@@ -6,7 +6,7 @@ import { cartState } from "../store/cartState";
 export interface FoodDetails {
     _id: string,
     name: string;
-    image: string;
+    imageUrl: string;
     price: number;
     description: string;
     category: string
@@ -35,7 +35,7 @@ export const FoodItemCard = ({ foodDetails }: { foodDetails: FoodDetails } ) => 
         <div className="rounded-2xl shadow-md bg-white w-80 max-w-sm hover:scale-105">
             <div className="relative">
                 <img 
-                    src={foodDetails.image} 
+                    src={foodDetails.imageUrl} 
                     alt={foodDetails.name} 
                     className="w-80 h-64 rounded-t-2xl object-cover"/>
                 { !itemCount ? (

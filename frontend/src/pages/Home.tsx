@@ -20,8 +20,8 @@ export const Home = () => {
             } catch (err) {
 
             }
-            fetchFoodList();
         }
+        fetchFoodList();
     }, []);
 
     return <div>

@@ -3,7 +3,7 @@ import { atom } from "recoil";
   export interface FoodDetails {
     _id: string,
     name: string;
-    image: string;
+    imageUrl: string;
     price: number;
     description: string;
     category: string

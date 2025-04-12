@@ -7,6 +7,7 @@ import { foodList } from "../store/foodList";
 export const FoodDisplay = () => {
 
     const foodListState = useRecoilValue(foodList);
+    console.log(foodListState);
 
     const foodCategory = useRecoilValue(foodCategoryState)
     const filteredFoodList = foodCategory === 'All' ? foodListState : foodListState.filter(foodItem => foodItem.category === foodCategory)
