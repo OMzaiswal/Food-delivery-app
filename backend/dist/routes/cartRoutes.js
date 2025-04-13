@@ -69,7 +69,9 @@ router.post('/add', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (existingItem) {
             const updatedItem = yield prismaClient_1.default.cartItem.update({
                 where: { id: existingItem.id },
-                data: { quantity: existingItem.quantity + quantity }
+                data: { quantity: {
+                        increment: quantity
+                    } }
             });
             res.json(updatedItem);
             return;
@@ -145,7 +147,7 @@ router.delete('/remove/:foodItemId', (req, res) => __awaiter(void 0, void 0, voi
     }
 }));
 // Clear cart
-router.delete('removeCart', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/removeCart', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _e;
     const userId = (_e = req.user) === null || _e === void 0 ? void 0 : _e.id;
     try {
