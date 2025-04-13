@@ -1,13 +1,56 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { assets } from "../assets/assets";
 import { useRecoilState } from "recoil";
 import { showLoginPopup } from "../store/showLoginPopup";
+import { loginState } from "../store/loginState";
+import { toast } from "react-toastify";
+import { api } from "../api/axiosInstatnce";
 
 export const LoginPopup = () => {
 
     const [currentState, setCurrentState] = useState<'Log in' | 'Sign up'>('Log in');
     const [LoginPopupState, setLoginPopupState] = useRecoilState(showLoginPopup);
     const [agree, setAgree] = useState(false);
+    const [userLogin, setUserLogin] = useRecoilState(loginState);
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [fullName, setFullname] = useState('');
+
+    interface LoginResponse {
+        message: string | null
+        fullName: string | null
+    }
+
+    const handleAuth = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!agree) return;
+
+        // if (!email || !password || (currentState === 'Sign up' && !fullName)) {
+        //     toast.warn('All fields are required!!!');
+        //     return;
+        // }
+
+        try {
+            if (currentState === 'Log in') {
+                const res = await api.post<LoginResponse>('/user/login', { email, password });
+                if (res.status === 200) {
+                    setUserLogin({
+                        isLoggedIn: true,
+                        role: 'user',
+                        fullName: res.data.fullName
+                    })
+                    toast.success(`Welcome back Mr. ${res.data.fullName}`);
+                }
+            }
+        } catch(err: any) {
+            if (err.response) {
+                toast.error(err.response.data.message);
+            } else {
+                toast.error('Something went wrong, Try again!');
+            }
+        }
+    }
 
     if (!LoginPopupState) return null;
 
@@ -21,23 +64,29 @@ export const LoginPopup = () => {
                     <img src={assets.cross_icon} alt="close" className="w-6 h-6" />
                 </button>
                 <h2 className="text-2xl font-semibold text-center mb-4">{ currentState }</h2>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleAuth}>
                     { currentState === 'Sign up' && (
                         <input 
                             type="text"
                             placeholder="Full Name"
                             className="w-full p-2 border border-gray-400 rounded-md text-gray-600 font-semibold text-lg" 
+                            required
+                            onChange={(e) =>setFullname(e.target.value)}
                             />
                     )}
                     <input 
                         type="email" 
                         placeholder="Email"
-                        className="w-full p-2 border border-gray-400 rounded-md text-gray-600 font-semibold text-lg" 
+                        className="w-full p-2 border border-gray-400 rounded-md text-gray-600 font-semibold text-lg"
+                        required 
+                        onChange={e => setEmail(e.target.value)} 
                     />
                     <input 
                         type="password" 
                         placeholder="Password"
                         className="w-full p-2 border border-gray-400 rounded-md text-gray-600 font-semibold text-lg" 
+                        required
+                        onChange={e => setPassword(e.target.value)} 
                     />
                     <div className="flex items-center space-x-2">
                         <input 
@@ -58,6 +107,7 @@ export const LoginPopup = () => {
                     className={`w-full p-2 border border-gray-400 rounded-md 
                         ${agree ? 'bg-red-400 text-white hover:bg-red-600' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
                         disabled={!agree}
+                        type="submit"
                     >
                         {currentState}
                     </button>
