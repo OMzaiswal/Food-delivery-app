@@ -17,7 +17,6 @@ const authenticate = (req, res, next) => {
         const SECRET_KEY = process.env.JWT_SECRET;
         if (!SECRET_KEY) {
             throw new Error('JWT_SECRET_KEY is not set in environment variable');
-            return;
         }
         const decoded = jsonwebtoken_1.default.verify(token, SECRET_KEY);
         req.user = decoded;
@@ -42,6 +41,7 @@ const AuthorizeUser = (req, res, next) => {
     var _a;
     if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== 'user') {
         res.status(403).json({ message: 'Forbidden: Users Only' });
+        return;
     }
     next();
 };

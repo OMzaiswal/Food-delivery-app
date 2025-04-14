@@ -18,7 +18,6 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         const SECRET_KEY = process.env.JWT_SECRET
         if(!SECRET_KEY) {
             throw new Error('JWT_SECRET_KEY is not set in environment variable');
-            return;
         }
 
         const decoded = jwt.verify(token, SECRET_KEY) as {id: string, role: string};
@@ -42,6 +41,7 @@ export const AuthorizeAdmin = (req: Request, res: Response, next: NextFunction) 
 export const AuthorizeUser = (req: Request, res: Response, next: NextFunction) => {
     if (req.user?.role !== 'user') {
         res.status(403).json({message: 'Forbidden: Users Only'});
+        return;
     }
     next();
 }
