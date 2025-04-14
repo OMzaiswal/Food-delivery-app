@@ -26,10 +26,10 @@ export const LoginPopup = () => {
         e.preventDefault();
         if (!agree) return;
 
-        // if (!email || !password || (currentState === 'Sign up' && !fullName)) {
-        //     toast.warn('All fields are required!!!');
-        //     return;
-        // }
+        if (!email || !password || (currentState === 'Sign up' && !fullName)) {
+            toast.warn('All fields are required!!!');
+            return;
+        }
 
         try {
             if (currentState === 'Log in') {
@@ -41,6 +41,18 @@ export const LoginPopup = () => {
                         fullName: res.data.fullName
                     })
                     toast.success(`Welcome back Mr. ${res.data.fullName}`);
+                    setLoginPopupState(false);
+                }
+            } else {
+                const res = await api.post('/user/signup', { fullName, email, password });
+                if (res.status === 201) {
+                    setUserLogin({
+                        isLoggedIn: true,
+                        role: 'user',
+                        fullName: fullName
+                    })
+                    toast.success('Signed up successfully');
+                    setLoginPopupState(false);
                 }
             }
         } catch(err: any) {

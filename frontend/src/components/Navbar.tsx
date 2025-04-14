@@ -1,10 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { showLoginPopup } from "../store/showLoginPopup";
 import { cartState } from "../store/cartState";
+import { loginState } from "../store/loginState";
+import { toast } from "react-toastify";
 
 export const Navbar = () => {
+
+    const [userLogin, setUserLogin] = useRecoilState(loginState);
 
     const menuOptions = [
         { label: "HOME", href: "/" },
@@ -50,10 +54,39 @@ export const Navbar = () => {
                             </span>
                         )}
                 </div>
-                <button 
-                    className="border border-red-300 rounded-4xl px-4 py-2 hover:bg-red-50"
+                {userLogin.isLoggedIn ? ( 
+                    <div className="relative group">
+                        <img src="profile_icon.png" alt="profile icon" className="cursor-pointer" />
+                        <div className="absolute left-1/2 -translate-x-1/2 w-48 bg-white shadow-lg rounded-md py-2 z-50 hidden group-hover:block">
+                            <div className="px-4 py-2 font-semibold text-gray-700 border-b">
+                                Hi, <b className="text-orange-500">{userLogin.fullName}</b>
+                            </div>
+                            <button className="w-full text-left px-4 py-1 hover:bg-gray-100">Profile</button>
+                            <button 
+                                className="w-full text-left px-4 py-1 hover:bg-gray-100"
+                                onClick={() => navigate('/orders')}
+                            >
+                                    Orders
+                            </button>
+                            <button
+                                className="w-full text-left px-4 py-1 hover:bg-gray-100"
+                                onClick={() => {
+                                    setUserLogin({ isLoggedIn: false, role: null, fullName: null });
+                                    toast.success('Logged out successfully');
+                                }}   
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                    ) : ( 
+                    <>
+                    <button 
+                    className="border border-red-300 rounded-4xl px-4 py-2 hover:bg-red-50 cursor-pointer hover:scale-105"
                     onClick={() => setLoginPopupState(true)}
-                    >Sign In</button>
+                    >Sign In</button></> 
+                )}
+                
             </div>
             
         </div>

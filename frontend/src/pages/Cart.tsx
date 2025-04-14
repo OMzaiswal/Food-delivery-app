@@ -101,7 +101,7 @@ export const Cart = () => {
                 <button className="px-8 py-3 bg-orange-500 rounded-md text-white mt-2 hover:scale-105"
                     onClick={() => {
                         setCartSubtotal(subtotal);
-                        navigate('/order')
+                        navigate('/placeOrder')
                     }}
                 >PROCEED TO CHECKOUT</button>
             </div>
