@@ -30,9 +30,8 @@ model User {
   password    String
   phoneNumber String?    @unique
   role        Role       @default(USER)
-  address     Address?   @relation(name: "userAddress", fields: [addressId], references: [id])
-  addressId   String?    @unique
-  cart        Cart?
+  address     Address[]  
+  cart        Cart?      
   orders      Order[]
 }
 
@@ -43,31 +42,31 @@ model Address {
   state      String
   zipcode    String
   country    String
-  user       User?      @relation(name: "userAddress")
-  userId     String     @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String     
 }
 
 model FoodItem {
   id           String   @id @default(cuid())
   name         String
   description  String
-  price        String
+  price        Decimal @db.Decimal(10, 2)
   imageUrl     String
   category     String
   cartItems    CartItem[]
   orderItems   OrderItem[]
 }
 
-model        Cart {
+model Cart {
   id         String    @id @default(cuid())
   userId     String    @unique
-  user       User      @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   items      CartItem[]
 }
 
 model CartItem {
   id           String    @id @default(cuid())
-  cart         Cart      @relation(fields: [cartId], references: [id])
+  cart         Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId       String
   foodItem     FoodItem  @relation(fields: [foodItemId], references: [id])
   foodItemId   String
@@ -76,7 +75,7 @@ model CartItem {
 
 model Order {
   id          String      @id @default(cuid())
-  user        User        @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   items       OrderItem[]
   totalPrice  Decimal
@@ -89,17 +88,17 @@ model Order {
 
 model OrderItem {
   id         String       @id  @default(cuid())
-  order      Order        @relation(fields: [orderId], references: [id])
+  order      Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId    String
   foodItem   FoodItem     @relation(fields: [foodItemId], references: [id])
   foodItemId String
-  quantity   String
+  quantity   Int
   price      Decimal
 }
 
 model Payment {
   id            String        @id @default(cuid())
-  order         Order         @relation(fields: [orderId], references: [id])
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId       String        @unique
   paymentMethod PaymentMethod
   paymentStatus PaymentStatus @default(PENDING)
@@ -108,9 +107,9 @@ model Payment {
   createdAt     DateTime      @default(now())
 }
 
-model             Delivery {
+model Delivery {
   id              String     @id @default(cuid())
-  order           Order      @relation(fields: [orderId], references: [id])
+  order           Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId         String     @unique
   deliveryAddress String
   deliveryStatus  DeliveryStatus @default(PENDING)
