@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { assets } from "../assets/assets";
 import { useRecoilState } from "recoil";
-import { showLoginPopup } from "../store/showLoginPopup";
-import { loginState } from "../store/loginState";
+import { showLoginPopup } from "../recoil/showLoginPopup";
+import { loginState } from "../recoil/loginState";
 import { toast } from "react-toastify";
 import { api } from "../api/axiosInstatnce";
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { useRecoilState } from "recoil";
-import { cartState } from "../store/cartState";
+import { cartState } from "../recoil/cartState";
 
 export interface FoodDetails {
     id: string,

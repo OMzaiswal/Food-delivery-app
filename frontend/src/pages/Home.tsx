@@ -4,7 +4,7 @@ import { FoodDisplay } from "../components/FoodDisplay"
 import { Header } from "../components/Header"
 import { api } from "../api/axiosInstatnce"
 import { useSetRecoilState } from "recoil"
-import { foodList } from "../store/foodList"
+import { foodList } from "../recoil/foodList"
 
 export const Home = () => {
 

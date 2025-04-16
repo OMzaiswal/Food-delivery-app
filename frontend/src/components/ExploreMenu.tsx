@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { menu_list } from "../assets/assets";
-import { foodCategoryState } from "../store/foodCategoryState";
+import { foodCategoryState } from "../recoil/foodCategoryState";
 
 export const ExploreMenu = () => {
 

@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { cartSubtotal } from "../store/cartSubtotal";
+import { cartSubtotal } from "../recoil/cartSubtotal";
 
 export const PlaceOrder = () => {
 

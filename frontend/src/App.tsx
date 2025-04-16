@@ -14,7 +14,7 @@ import { ListItems } from './pages/admin/ListItems'
 import { AdminOrders } from './pages/admin/AdminOrders'
 import { Orders } from './pages/Orders'
 import { useSetRecoilState } from 'recoil'
-import { loginState } from './store/loginState'
+import { loginState } from './recoil/loginState'
 import { useEffect } from 'react'
 import { api } from './api/axiosInstatnce'
 

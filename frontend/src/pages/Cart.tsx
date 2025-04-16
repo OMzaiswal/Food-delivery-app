@@ -1,9 +1,9 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { cartState } from "../store/cartState"
+import { cartState } from "../recoil/cartState"
 import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
-import { cartSubtotal } from "../store/cartSubtotal";
-import { foodList } from "../store/foodList";
+import { cartSubtotal } from "../recoil/cartSubtotal";
+import { foodList } from "../recoil/foodList";
 
 export const Cart = () => {
 

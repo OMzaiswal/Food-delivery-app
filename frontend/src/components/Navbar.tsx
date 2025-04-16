@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { showLoginPopup } from "../store/showLoginPopup";
-import { cartState } from "../store/cartState";
-import { loginState } from "../store/loginState";
+import { showLoginPopup } from "../recoil/showLoginPopup";
+import { cartState } from "../recoil/cartState";
+import { loginState } from "../recoil/loginState";
 import { toast } from "react-toastify";
 
 export const Navbar = () => {
