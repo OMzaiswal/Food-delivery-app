@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
   export interface FoodDetails {
-    _id: string,
+    id: string,
     name: string;
     imageUrl: string;
     price: number;

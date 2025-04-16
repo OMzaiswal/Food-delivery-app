@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { cartState } from "../store/cartState";
 
 export interface FoodDetails {
-    _id: string,
+    id: string,
     name: string;
     imageUrl: string;
     price: number;
@@ -15,20 +15,28 @@ export interface FoodDetails {
 export const FoodItemCard = ({ foodDetails }: { foodDetails: FoodDetails } ) => {
 
     const [itemCount, setItemCount] = useState(0);
-    const setCartState = useSetRecoilState(cartState);
+    const [cart, setCart] = useRecoilState(cartState)
+
+    useEffect(() => {
+        setItemCount(cart[foodDetails.id] || 0);  // Sync itemCount with cartState
+    }, [cart, foodDetails.id]);
 
     const handleAddItem = () => {
+        if (!foodDetails.id) {
+            console.error("❌ foodDetails._id is undefined", foodDetails);
+            return;
+          }
         setItemCount(prev => prev + 1);
-        setCartState(prevCart => ({
+        setCart(prevCart => ({
             ...prevCart,
-            [foodDetails._id]: (prevCart[foodDetails._id] || 0) + 1
+            [foodDetails.id]: (prevCart[foodDetails.id] || 0) + 1
         }));
     }
 
     const handleRemoveItem = () => {
         setItemCount(prev => prev - 1);
-        setCartState(({ [foodDetails._id]: count, ...rest}) => 
-        count > 1 ? { ...rest, [foodDetails._id]: count - 1 } : { ...rest })
+        setCart(({ [foodDetails.id]: count, ...rest}) => 
+        count > 1 ? { ...rest, [foodDetails.id]: count - 1 } : { ...rest })
     }
 
     return (

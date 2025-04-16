@@ -1,11 +1,13 @@
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { cartState } from "../store/cartState"
-import { assets, food_list } from "../assets/assets";
+import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { cartSubtotal } from "../store/cartSubtotal";
+import { foodList } from "../store/foodList";
 
 export const Cart = () => {
 
+    const foodListState = useRecoilValue(foodList);
     const [cartItems, setCartItems] = useRecoilState(cartState);
     const setCartSubtotal = useSetRecoilState(cartSubtotal);
     let subtotal = 0;
@@ -45,13 +47,16 @@ export const Cart = () => {
         
         <div>
             {Object.entries(cartItems).map(([id, quantity]) => {
-                const product = food_list.find((item) => item._id === id);
-                if (!product) return null;
+                const product = foodListState.find((item) => item.id === id);
+                if (!product) {
+                    console.warn("No matching product found for id:", id);
+                    return null;
+                }
                 subtotal += ( product.price * quantity )
 
                 return (
                     <div className="grid grid-cols-6 mt-4 text-xl items-center">
-                        <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded" />
+                        <img src={product.imageUrl} alt={product.name} className="w-16 h-16 object-cover rounded" />
                         <div>{product.name}</div>
                         <div>${product.price}</div>
                         <div className="flex space-x-2">
