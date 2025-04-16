@@ -11,6 +11,11 @@ router.use(authenticate, AuthorizeUser);
 router.get('/', async (req, res) => {
     const userId = req.user?.id;
 
+    if (!userId) {
+        res.status(401).json({message: "Unauthorized"});
+        return;
+    }
+
     try {
         const cart = await prisma.cart.findUnique({
             where: {
@@ -38,7 +43,12 @@ router.post('/add', async (req, res) => {
     const { foodItemId, quantity } = req.body;
 
     if (!userId) {
-        res.status(201).json({message: "Unauthorized"});
+        res.status(401).json({message: "Unauthorized"});
+        return;
+    }
+
+    if (!foodItemId || quantity<= 0) {
+        res.status(400).json({message: "Invalid food item or quantity"});
         return;
     }
 
@@ -93,6 +103,17 @@ router.put('/update', async (req, res) => {
     const userId = req.user?.id;
     const { foodItemId, quantity } = req.body;
 
+    if (!userId) {
+        res.status(401).json({message: "Unauthorized"});
+        return;
+    }
+
+    if (!foodItemId || quantity<= 0) {
+        res.status(400).json({message: "Invalid food item or quantity"});
+        return;
+    }
+
+
     try {
         const cart = await prisma.cart.findUnique({
             where: { userId }
@@ -127,6 +148,15 @@ router.delete('/remove/:foodItemId', async (req, res) => {
     const userId = req.user?.id;
     const { foodItemId } = req.params;
 
+    if (!userId) {
+        res.status(401).json({message: "Unauthorized"});
+        return;
+    }
+
+    if (!foodItemId) {
+        res.status(404).json({ message: "Wrong Food item"});
+    }
+
     try {
         const cart = await prisma.cart.findUnique({ where: { userId }});
         if(!cart) {
@@ -149,6 +179,11 @@ router.delete('/remove/:foodItemId', async (req, res) => {
 // Clear cart
 router.delete('/removeCart', async (req, res) => {
     const userId = req.user?.id;
+
+    if (!userId) {
+        res.status(401).json({message: "Unauthorized"});
+        return;
+    }
 
     try {
         const cart = await prisma.cart.findUnique({ where: { userId }});
