@@ -2,6 +2,11 @@ import express, { Request, Response } from 'express';
 import { authenticate, AuthorizeUser } from '../middlewares/authMiddleware';
 import prisma from '../lib/prismaClient';
 
+type SyncCartItem = {
+    foodItemId: string;
+    quantity: number;
+  };
+
 
 const router = express.Router();
 
@@ -200,4 +205,40 @@ router.delete('/removeCart', async (req, res) => {
         return;
     }
 })
+
+router.post('/sync', async (req, res) => {
+    const userId = req.user?.id;
+    const items = req.body.items;
+    if (!userId) {
+        res.status(404).json({ message: "Unauthorized" });
+        return;
+    }
+
+    try {
+        const cart = await prisma.cart.upsert({
+            where: { userId },
+            create: { userId },
+            update: {}
+        })
+
+        await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+
+        if (items.length > 0) {
+            await prisma.cartItem.createMany({ 
+                data: items.map((item: SyncCartItem) => ({
+                    cartId: cart.id,
+                    foodItemId: item.foodItemId,
+                    quantity: item.quantity
+                }))
+            })
+        }
+        res.status(200).json({ message: "Cart synced successfully" });
+        return;
+    } catch(err) {
+        res.status(500).json({ message: "Failed to sync cart" });
+        return;
+    }
+})
+
+
 export default router;
