@@ -5,10 +5,12 @@ import { showLoginPopup } from "../recoil/showLoginPopup";
 import { cartState } from "../recoil/cartState";
 import { loginState } from "../recoil/loginState";
 import { toast } from "react-toastify";
+import { useCartSync } from "../utils/useCartSync";
 
 export const Navbar = () => {
 
     const [userLogin, setUserLogin] = useRecoilState(loginState);
+    useCartSync();
 
     const menuOptions = [
         { label: "HOME", href: "/" },
