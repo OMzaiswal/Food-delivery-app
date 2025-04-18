@@ -9,7 +9,7 @@ export const useCartSync = () => {
     const cartItems = useRecoilValue(cartArraySelector);
 
     useEffect(() => {
-        if (cartItems.length === 0) return;
+        if (!cartItems || cartItems.length === 0) return;
 
         const syncToBackend = debounce(async () => {
             try {

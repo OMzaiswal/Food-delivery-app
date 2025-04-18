@@ -1,17 +1,19 @@
 import React, { useState } from "react"
 import { assets } from "../assets/assets";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { showLoginPopup } from "../recoil/showLoginPopup";
 import { loginState } from "../recoil/loginState";
 import { toast } from "react-toastify";
 import { api } from "../api/axiosInstatnce";
+import { cartState } from "../recoil/cartState";
 
 export const LoginPopup = () => {
 
     const [currentState, setCurrentState] = useState<'Log in' | 'Sign up'>('Log in');
     const [LoginPopupState, setLoginPopupState] = useRecoilState(showLoginPopup);
     const [agree, setAgree] = useState(false);
-    const [userLogin, setUserLogin] = useRecoilState(loginState);
+    const setUserLogin = useSetRecoilState(loginState);
+    const setCartState = useSetRecoilState(cartState);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -20,6 +22,7 @@ export const LoginPopup = () => {
     interface LoginResponse {
         message: string | null
         fullName: string | null
+        cart: {}
     }
 
     const handleAuth = async (e: React.FormEvent) => {
@@ -40,6 +43,7 @@ export const LoginPopup = () => {
                         role: 'user',
                         fullName: res.data.fullName
                     })
+                    setCartState(res.data.cart)
                     toast.success(`Welcome back Mr. ${res.data.fullName}`);
                     setLoginPopupState(false);
                 }

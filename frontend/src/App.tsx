@@ -17,16 +17,19 @@ import { useSetRecoilState } from 'recoil'
 import { loginState } from './recoil/loginState'
 import { useEffect } from 'react'
 import { api } from './api/axiosInstatnce'
+import { cartState } from './recoil/cartState'
 
 const AppContent = () => {
     
   const location = useLocation();
   const isAdminPage =  location.pathname.startsWith('/admin')
   const setLoginState = useSetRecoilState(loginState);
+  const setCartState = useSetRecoilState(cartState);
 
   interface LoginResponse {
     message: string | null
     fullName: string | null
+    cart: {}
 }
 
   useEffect(() => {
@@ -39,6 +42,7 @@ const AppContent = () => {
             role: 'user',
             fullName: res.data.fullName
           })
+          setCartState(res.data.cart);
           // toast.success(`Welcome back Mr. ${res.data.fullName}`)
         }
       } catch (err) {}

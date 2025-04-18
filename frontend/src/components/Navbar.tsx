@@ -1,16 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { showLoginPopup } from "../recoil/showLoginPopup";
 import { cartState } from "../recoil/cartState";
 import { loginState } from "../recoil/loginState";
 import { toast } from "react-toastify";
 import { useCartSync } from "../utils/useCartSync";
+import { JSX } from "react";
+import { api } from "../api/axiosInstatnce";
 
 export const Navbar = () => {
 
     const [userLogin, setUserLogin] = useRecoilState(loginState);
-    useCartSync();
+
+    const CartSyncWrapper = (): JSX.Element | null => {
+        useCartSync();
+        return null;
+    }
 
     const menuOptions = [
         { label: "HOME", href: "/" },
@@ -21,12 +27,13 @@ export const Navbar = () => {
 
     const setLoginPopupState = useSetRecoilState(showLoginPopup);
     const navigate = useNavigate();
-    const cartItems = useRecoilValue(cartState);
+    const [cartItems, setCartItems] = useRecoilState(cartState);
 
     const totalCartItems = Object.values(cartItems).reduce((total, quantity) => total+quantity, 0);
 
     return (
         <div className="flex justify-between items-center">
+            {userLogin.isLoggedIn && <CartSyncWrapper />}
             <div className="text-3xl font-extrabold text-red-400">
             <Link to='/'>HungerBox</Link>
             </div>
@@ -72,9 +79,17 @@ export const Navbar = () => {
                             </button>
                             <button
                                 className="w-full text-left px-4 py-1 hover:bg-gray-100"
-                                onClick={() => {
-                                    setUserLogin({ isLoggedIn: false, role: null, fullName: null });
-                                    toast.success('Logged out successfully');
+                                onClick={async () => {
+                                    try {
+                                        const res = await api.post('/user/logout')
+                                        if (res.status === 200) {
+                                            setUserLogin({ isLoggedIn: false, role: null, fullName: null });
+                                            setCartItems({});
+                                            toast.success('Logged out successfully');
+                                        } 
+                                    } catch (err) {
+                                        console.log(err);
+                                    }
                                 }}   
                             >
                                 Logout
