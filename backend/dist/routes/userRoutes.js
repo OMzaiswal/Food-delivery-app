@@ -23,6 +23,7 @@ if (!SECRET_KEY) {
     throw new Error('JWT_SECRET_KEY is not set in the environment variables!');
 }
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { email, password } = req.body;
     if (!email || !password) {
         res.status(400).json({ message: 'All fields are required' });
@@ -30,8 +31,13 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     try {
         const user = yield prismaClient_1.default.user.findUnique({
-            where: {
-                email
+            where: { email },
+            include: {
+                cart: {
+                    include: {
+                        items: true
+                    }
+                }
             }
         });
         if (!user) {
@@ -50,7 +56,11 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-        res.status(200).json({ message: "Logged in successfully", fullName: user.fullName });
+        const cart = {};
+        (_a = user.cart) === null || _a === void 0 ? void 0 : _a.items.forEach(item => {
+            cart[item.foodItemId] = item.quantity;
+        });
+        res.status(200).json({ message: "Logged in successfully", fullName: user.fullName, cart });
         return;
     }
     catch (err) {
@@ -61,7 +71,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 router.get('/dashboard', authMiddleware_1.authenticate, authMiddleware_1.AuthorizeUser, (req, res) => {
 });
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { fullName, email, password, role } = req.body;
+    const { fullName, email, password } = req.body;
     if (!fullName || !email || !password) {
         res.status(400).json({ message: 'All fields are required!' });
         return;
@@ -78,7 +88,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
         const hashedPassword = yield bcrypt_1.default.hash(password, 10);
         const newUser = yield prismaClient_1.default.user.create({
-            data: { fullName, email, password: hashedPassword, role }
+            data: { fullName, email, password: hashedPassword }
         });
         const token = jsonwebtoken_1.default.sign({ id: newUser.id, role: 'user' }, SECRET_KEY, { expiresIn: '7d' });
         res.cookie('token', token, {
@@ -97,12 +107,41 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 router.use(authMiddleware_1.authenticate, authMiddleware_1.AuthorizeUser);
-router.get('/auth/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+router.post('/logout', (req, res) => {
     try {
-        const id = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
-        const user = yield prismaClient_1.default.user.findUnique({ where: { id } });
-        res.status(200).json({ message: 'User is logged in', fullName: user === null || user === void 0 ? void 0 : user.fullName });
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        });
+        res.status(200).json({ message: "User logged out successfully" });
+        return;
+    }
+    catch (err) {
+        console.log('Error clearing cookie', err);
+        res.status(500).json({ message: "Unable to logout" });
+    }
+});
+router.get('/auth/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b, _c;
+    try {
+        const id = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
+        const user = yield prismaClient_1.default.user.findUnique({
+            where: { id },
+            include: {
+                cart: {
+                    include: {
+                        items: true
+                    }
+                }
+            }
+        });
+        const cart = {};
+        (_c = user === null || user === void 0 ? void 0 : user.cart) === null || _c === void 0 ? void 0 : _c.items.forEach(item => {
+            cart[item.foodItemId] = item.quantity;
+        });
+        res.status(200).json({ message: 'User is logged in', fullName: user === null || user === void 0 ? void 0 : user.fullName, cart });
         return;
     }
     catch (err) {

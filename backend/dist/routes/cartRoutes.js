@@ -21,6 +21,10 @@ router.use(authMiddleware_1.authenticate, authMiddleware_1.AuthorizeUser);
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
     try {
         const cart = yield prismaClient_1.default.cart.findUnique({
             where: {
@@ -48,7 +52,11 @@ router.post('/add', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
     const { foodItemId, quantity } = req.body;
     if (!userId) {
-        res.status(201).json({ message: "Unauthorized" });
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+    if (!foodItemId || quantity <= 0) {
+        res.status(400).json({ message: "Invalid food item or quantity" });
         return;
     }
     try {
@@ -98,6 +106,14 @@ router.put('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     var _c;
     const userId = (_c = req.user) === null || _c === void 0 ? void 0 : _c.id;
     const { foodItemId, quantity } = req.body;
+    if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+    if (!foodItemId || quantity <= 0) {
+        res.status(400).json({ message: "Invalid food item or quantity" });
+        return;
+    }
     try {
         const cart = yield prismaClient_1.default.cart.findUnique({
             where: { userId }
@@ -129,6 +145,13 @@ router.delete('/remove/:foodItemId', (req, res) => __awaiter(void 0, void 0, voi
     var _d;
     const userId = (_d = req.user) === null || _d === void 0 ? void 0 : _d.id;
     const { foodItemId } = req.params;
+    if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+    if (!foodItemId) {
+        res.status(404).json({ message: "Wrong Food item" });
+    }
     try {
         const cart = yield prismaClient_1.default.cart.findUnique({ where: { userId } });
         if (!cart) {
@@ -150,6 +173,10 @@ router.delete('/remove/:foodItemId', (req, res) => __awaiter(void 0, void 0, voi
 router.delete('/removeCart', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _e;
     const userId = (_e = req.user) === null || _e === void 0 ? void 0 : _e.id;
+    if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
     try {
         const cart = yield prismaClient_1.default.cart.findUnique({ where: { userId } });
         if (!cart) {
@@ -162,6 +189,38 @@ router.delete('/removeCart', (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
     catch (err) {
         res.status(500).json({ error: "Failed to clear cart" });
+        return;
+    }
+}));
+router.post('/sync', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _f;
+    const userId = (_f = req.user) === null || _f === void 0 ? void 0 : _f.id;
+    const items = req.body.items;
+    if (!userId) {
+        res.status(404).json({ message: "Unauthorized" });
+        return;
+    }
+    try {
+        const cart = yield prismaClient_1.default.cart.upsert({
+            where: { userId },
+            create: { userId },
+            update: {}
+        });
+        yield prismaClient_1.default.cartItem.deleteMany({ where: { cartId: cart.id } });
+        if (items.length > 0) {
+            yield prismaClient_1.default.cartItem.createMany({
+                data: items.map((item) => ({
+                    cartId: cart.id,
+                    foodItemId: item.foodItemId,
+                    quantity: item.quantity
+                }))
+            });
+        }
+        res.status(200).json({ message: "Cart synced successfully" });
+        return;
+    }
+    catch (err) {
+        res.status(500).json({ message: "Failed to sync cart" });
         return;
     }
 }));
