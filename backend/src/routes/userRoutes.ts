@@ -3,14 +3,33 @@ import { authenticate, AuthorizeUser } from "../middlewares/authMiddleware";
 import prisma from "../lib/prismaClient";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import Stripe from "stripe";
 
 const router = Router();
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-02-24.acacia'})
+
 if(!SECRET_KEY) {
     throw new Error('JWT_SECRET_KEY is not set in the environment variables!');
 }
+
+router.post('/create-payment-intent', async (req, res) => {
+    const { amount } = req.body;
+
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount*100,
+            currency: 'usd', 
+            payment_method_types: ['card']
+        })
+        res.send({ clientSecret: paymentIntent.client_secret })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to create message payment intent' })
+    }
+})
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
