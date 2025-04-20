@@ -18,6 +18,7 @@ import { loginState } from './recoil/loginState'
 import { useEffect } from 'react'
 import { api } from './api/axiosInstatnce'
 import { cartState } from './recoil/cartState'
+import { PaymentSuccess } from './pages/Payment-success'
 
 const AppContent = () => {
     
@@ -60,6 +61,7 @@ const AppContent = () => {
           <Route path='/' element={<Home />}></Route>
           <Route path='/cart' element={<Cart />}></Route>
           <Route path='/placeOrder' element={<PlaceOrder />}></Route>
+          <Route path='payment-success' element={<PaymentSuccess />}></Route>
           <Route path='/orders' element={<Orders />}></Route>
           <Route path='/admin' element={<AdminLayout />}>
             <Route path='add-food' element={<AddFood />}></Route>

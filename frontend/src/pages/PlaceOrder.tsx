@@ -1,9 +1,27 @@
 import { useRecoilValue } from "recoil";
 import { cartSubtotal } from "../recoil/cartSubtotal";
+import { api } from "../api/axiosInstatnce";
+import { toast } from "react-toastify";
 
 export const PlaceOrder = () => {
 
     const subtotal = useRecoilValue(cartSubtotal);
+    const amount = subtotal + ( subtotal > 0 ? 2 : 0 )
+
+    const handleCheckout = async () => {
+        try {
+            const res = await api.post<{ url: string }>('/user/create-checkout-session', { amount });
+
+            if (res.data?.url) {
+                window.location.href = res.data.url;
+            } else {
+                toast.warn('Failed to initiate payment session')
+            }
+        } catch (err) {
+            console.log('Error while checkout', err);
+            toast.error('Something went wrong, try again');
+        }
+    }
 
     return <div className="flex flex-col md:flex-row justify-between space-y-8 md:space-y-0 md:space-x-12 p-4">
         <div className="w-full md:w-1/2">
@@ -41,7 +59,7 @@ export const PlaceOrder = () => {
                     <b>${subtotal > 0 ? (subtotal + 2) : 0}</b>
                 </div>
                 <button className="px-8 py-3 bg-orange-500 rounded-md text-white mt-2 hover:scale-105"
-                    onClick={() => {}}
+                    onClick={handleCheckout}
                 >PROCEED TO PAYMENT</button>
             </div>
     </div>
