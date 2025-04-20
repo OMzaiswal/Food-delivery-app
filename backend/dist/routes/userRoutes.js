@@ -17,8 +17,10 @@ const authMiddleware_1 = require("../middlewares/authMiddleware");
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const stripe_1 = __importDefault(require("stripe"));
 const router = (0, express_1.Router)();
 const SECRET_KEY = process.env.JWT_SECRET;
+const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-02-24.acacia' });
 if (!SECRET_KEY) {
     throw new Error('JWT_SECRET_KEY is not set in the environment variables!');
 }
@@ -66,6 +68,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     catch (err) {
         console.log(err);
         res.status(500).json({ message: "Internal server error" });
+        return;
     }
 }));
 router.get('/dashboard', authMiddleware_1.authenticate, authMiddleware_1.AuthorizeUser, (req, res) => {
@@ -121,6 +124,7 @@ router.post('/logout', (req, res) => {
     catch (err) {
         console.log('Error clearing cookie', err);
         res.status(500).json({ message: "Unable to logout" });
+        return;
     }
 });
 router.get('/auth/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -146,6 +150,34 @@ router.get('/auth/me', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
     catch (err) {
         res.status(500).json({ message: 'Something went wrong' });
+        return;
+    }
+}));
+router.post('/create-checkout-session', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { amount } = req.body;
+    try {
+        const session = yield stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'payment',
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: { name: 'Food Order' },
+                        unit_amount: amount * 100,
+                    },
+                    quantity: 1
+                }
+            ],
+            success_url: 'http://localhost:5173/payment-success',
+            cancel_url: 'http://localhost:5173/payment-cancelled',
+        });
+        res.send({ url: session.url });
+        return;
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Something went wrong!!!' });
         return;
     }
 }));

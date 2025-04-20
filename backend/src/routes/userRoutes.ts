@@ -15,21 +15,6 @@ if(!SECRET_KEY) {
     throw new Error('JWT_SECRET_KEY is not set in the environment variables!');
 }
 
-router.post('/create-payment-intent', async (req, res) => {
-    const { amount } = req.body;
-
-    try {
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount*100,
-            currency: 'usd', 
-            payment_method_types: ['card']
-        })
-        res.send({ clientSecret: paymentIntent.client_secret })
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Failed to create message payment intent' })
-    }
-})
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -80,6 +65,7 @@ router.post('/login', async (req, res) => {
     } catch(err) {
         console.log(err);
         res.status(500).json({message: "Internal server error"});
+        return;
     }
 })
 
@@ -145,7 +131,7 @@ router.post('/logout', (req, res) => {
     } catch (err) {
         console.log('Error clearing cookie', err);
         res.status(500).json({message: "Unable to logout"});
-
+        return;
     }
 })
 
@@ -170,6 +156,35 @@ router.get('/auth/me', async (req, res) => {
         return;
     } catch (err) {
         res.status(500).json({message: 'Something went wrong'});
+        return;
+    }
+})
+
+router.post('/create-checkout-session', async (req, res) => {
+    const { amount } = req.body;
+
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'payment',
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: { name: 'Food Order' },
+                        unit_amount: amount * 100,
+                    },
+                    quantity: 1
+                }
+            ],
+            success_url: 'http://localhost:5173/payment-success',
+            cancel_url: 'http://localhost:5173/payment-cancelled',
+        })
+        res.send({ url: session.url });
+        return;
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Something went wrong!!!' });
         return;
     }
 })
