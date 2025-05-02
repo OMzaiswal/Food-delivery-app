@@ -55,7 +55,7 @@ const AppContent = () => {
     <>
     <div className='main-container'>
         <LoginPopup />
-        { !isAdminPage && <Navbar /> }
+        { !isAdminPage && location.pathname !== '/payment-success' && <Navbar /> }
         <ToastContainer position='top-right' autoClose={3000} />
         <Routes>
           <Route path='/' element={<Home />}></Route>

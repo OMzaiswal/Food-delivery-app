@@ -2,6 +2,6 @@
 export const Orders = () => {
 
     return <div>
-        Orders Page for admin
+        Orders Page for user
     </div>
 }
