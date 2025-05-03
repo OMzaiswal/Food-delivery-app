@@ -161,9 +161,35 @@ router.get('/auth/me', async (req, res) => {
 })
 
 router.post('/create-checkout-session', async (req, res) => {
-    const { amount } = req.body;
-
+    const { amount, phoneNumber, address } = req.body;
     try {
+        const userId = req.user?.id;
+        if (!userId) {
+            res.status(401).json({ message: "Unauthorized"});
+            return;
+        }
+        const user = await prisma.user.findUnique({ where: { id: userId }});
+
+        if (!user) {
+            res.status(404).json({ message: "User not found"});
+            return;
+        }
+
+        if (!user.phoneNumber && phoneNumber) {
+            await prisma.user.update({
+                where: { id: userId },
+                data: { phoneNumber }
+            })
+        }
+
+        await prisma.address.create({
+            data: {
+                ...address,
+                userId
+            }
+        })
+
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
