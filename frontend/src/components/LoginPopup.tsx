@@ -41,7 +41,8 @@ export const LoginPopup = () => {
                     setUserLogin({
                         isLoggedIn: true,
                         role: 'user',
-                        fullName: res.data.fullName
+                        fullName: res.data.fullName,
+                        email: email
                     })
                     setCartState(res.data.cart)
                     toast.success(`Welcome back Mr. ${res.data.fullName}`);
@@ -53,7 +54,8 @@ export const LoginPopup = () => {
                     setUserLogin({
                         isLoggedIn: true,
                         role: 'user',
-                        fullName: fullName
+                        fullName: fullName,
+                        email: email
                     })
                     toast.success('Signed up successfully');
                     setLoginPopupState(false);

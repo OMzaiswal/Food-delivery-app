@@ -1,6 +1,27 @@
+import { useEffect } from "react"
 import { Link } from "react-router-dom"
+import { api } from "../api/axiosInstatnce"
+import { useSetRecoilState } from "recoil"
+import { cartState } from "../recoil/cartState"
 
 export const PaymentSuccess = () => {
+
+    const setCartState = useSetRecoilState(cartState);
+
+    useEffect(() => {
+        const finalizeOrder = async () => {
+            try {
+                await api.post('/user/finalize-order');
+                await api.delete('/cart/removeCart');
+
+                setCartState({});
+                
+            } catch(err) {
+                console.log('Your error: ',err)
+            }
+        }
+        finalizeOrder();
+    }, [])
 
     return (
         <div className="flex flex-col items-center mt-30 h-screen space-y-6">

@@ -4,10 +4,14 @@ import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { cartSubtotal } from "../recoil/cartSubtotal";
 import { foodList } from "../recoil/foodList";
+import { userLoginSelector } from "../recoil/userLoginSelector";
+import { showLoginPopup } from "../recoil/showLoginPopup";
 
 export const Cart = () => {
 
     const foodListState = useRecoilValue(foodList);
+    const isLoggedIn = useRecoilValue(userLoginSelector);
+    const setLoginPopup = useSetRecoilState(showLoginPopup);
     const [cartItems, setCartItems] = useRecoilState(cartState);
     const setCartSubtotal = useSetRecoilState(cartSubtotal);
     let subtotal = 0;
@@ -105,8 +109,14 @@ export const Cart = () => {
                 </div>
                 <button className="px-8 py-3 bg-orange-500 rounded-md text-white mt-2 hover:scale-105"
                     onClick={() => {
-                        setCartSubtotal(subtotal);
-                        navigate('/placeOrder')
+                        if (isLoggedIn) {
+                            setCartSubtotal(subtotal);
+                            navigate('/placeOrder');
+                        } else {
+                          setLoginPopup(true);
+                          
+                        }
+                        
                     }}
                 >PROCEED TO CHECKOUT</button>
             </div>

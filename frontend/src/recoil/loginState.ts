@@ -4,6 +4,7 @@ export interface LoginState {
     isLoggedIn: boolean;
     role: 'user' | 'admin' | null;
     fullName: string | null;
+    email: string | null;
 }
 
 export const loginState = atom<LoginState>({
@@ -11,6 +12,7 @@ export const loginState = atom<LoginState>({
     default: {
         isLoggedIn: false,
         role: null,
-        fullName: null
+        fullName: null,
+        email: null
     }
 })
