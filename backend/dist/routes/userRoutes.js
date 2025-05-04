@@ -154,8 +154,54 @@ router.get('/auth/me', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 router.post('/create-checkout-session', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { amount } = req.body;
+    var _d;
+    const { amount, phoneNumber, address } = req.body;
     try {
+        const userId = (_d = req.user) === null || _d === void 0 ? void 0 : _d.id;
+        if (!userId) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+        const user = yield prismaClient_1.default.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+        if (!user.phoneNumber && phoneNumber) {
+            yield prismaClient_1.default.user.update({
+                where: { id: userId },
+                data: { phoneNumber }
+            });
+        }
+        yield prismaClient_1.default.address.create({
+            data: Object.assign(Object.assign({}, address), { userId })
+        });
+        const cart = yield prismaClient_1.default.cart.findUnique({
+            where: { userId },
+            include: {
+                items: {
+                    include: { foodItem: true }
+                }
+            }
+        });
+        if (!cart || cart.items.length === 0) {
+            res.status(404).json({ message: 'Cart is empty' });
+            return;
+        }
+        const order = yield prismaClient_1.default.order.create({
+            data: {
+                userId,
+                totalPrice: amount,
+                status: 'PENDING',
+                items: {
+                    create: cart.items.map((item) => ({
+                        foodItemId: item.foodItemId,
+                        quantity: item.quantity,
+                        price: item.foodItem.price
+                    }))
+                }
+            }
+        });
         const session = yield stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',

@@ -151,6 +151,7 @@ router.delete('/remove/:foodItemId', (req, res) => __awaiter(void 0, void 0, voi
     }
     if (!foodItemId) {
         res.status(404).json({ message: "Wrong Food item" });
+        return;
     }
     try {
         const cart = yield prismaClient_1.default.cart.findUnique({ where: { userId } });
@@ -161,7 +162,7 @@ router.delete('/remove/:foodItemId', (req, res) => __awaiter(void 0, void 0, voi
         yield prismaClient_1.default.cartItem.deleteMany({
             where: { cartId: cart.id, foodItemId }
         });
-        res.json({ message: "Item removed from cart" });
+        res.status(200).json({ message: "Item removed from cart" });
         return;
     }
     catch (err) {
@@ -184,7 +185,7 @@ router.delete('/removeCart', (req, res) => __awaiter(void 0, void 0, void 0, fun
             return;
         }
         yield prismaClient_1.default.cartItem.deleteMany({ where: { cartId: cart.id } });
-        res.json({ message: "Cart cleared" });
+        res.status(200).json({ message: "Cart cleared" });
         return;
     }
     catch (err) {

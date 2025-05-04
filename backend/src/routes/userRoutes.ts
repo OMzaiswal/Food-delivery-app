@@ -189,6 +189,34 @@ router.post('/create-checkout-session', async (req, res) => {
             }
         })
 
+        const cart = await prisma.cart.findUnique({
+            where: { userId },
+            include: { 
+                items: {
+                    include: { foodItem: true}
+            } }
+        })
+            
+        if (!cart || cart.items.length === 0) {
+            res.status(404).json({ message: 'Cart is empty'});
+            return;
+        }
+            
+        const order = await prisma.order.create({
+            data: {
+                userId,
+                totalPrice: amount,
+                status: 'PENDING',
+                items: {
+                    create: cart.items.map((item) => ({
+                        foodItemId: item.foodItemId,
+                        quantity: item.quantity,
+                        price: item.foodItem.price
+                    }))
+                }
+            }
+        })
+
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],

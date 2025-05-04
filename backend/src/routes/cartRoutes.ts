@@ -160,6 +160,7 @@ router.delete('/remove/:foodItemId', async (req, res) => {
 
     if (!foodItemId) {
         res.status(404).json({ message: "Wrong Food item"});
+        return;
     }
 
     try {
@@ -172,7 +173,7 @@ router.delete('/remove/:foodItemId', async (req, res) => {
         await prisma.cartItem.deleteMany({
             where: { cartId: cart.id, foodItemId }
         })
-        res.json({message: "Item removed from cart"});
+        res.status(200).json({message: "Item removed from cart"});
         return;
     } catch(err) {
         res.status(500).json({error: "Failed to remove item"});
@@ -198,7 +199,7 @@ router.delete('/removeCart', async (req, res) => {
         }
 
         await prisma.cartItem.deleteMany({ where: { cartId: cart.id }});
-        res.json({message: "Cart cleared"});
+        res.status(200).json({message: "Cart cleared"});
         return;
     } catch(err) {
         res.status(500).json({error: "Failed to clear cart"});
