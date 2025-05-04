@@ -9,18 +9,17 @@ export const PaymentSuccess = () => {
     const setCartState = useSetRecoilState(cartState);
 
     useEffect(() => {
-        const finalizeOrder = async () => {
+        const clearCart = async () => {
             try {
-                await api.post('/user/finalize-order');
-                await api.delete('/cart/removeCart');
-
-                setCartState({});
-                
-            } catch(err) {
+                const res = await api.delete('/cart/removeCart');
+                if (res.status === 200) {
+                    setCartState({})
+                }
+            } catch (err) {
                 console.log('Your error: ',err)
             }
         }
-        finalizeOrder();
+        clearCart();
     }, [])
 
     return (
