@@ -36,6 +36,19 @@ export const Cart = () => {
             return updatedCart;
         })
     }
+
+    if (Object.keys(cartItems).length === 0) {
+        return <div className="flex flex-col items-center space-y-4 mt-20 mb-40">
+           <h1 className="text-4xl font-bold text-red-600"> Your cart is empty! </h1>
+           <p className="text-xl text-gray-500">Looks like you haven't added anything to your cart yet.</p>
+           <button
+            className="border rounded-md px-3 py-2 bg-green-500 text-white hover:scale-105"
+            onClick={() => navigate('/')}
+           >
+                Browse Food Items
+           </button>
+        </div>
+    }
     
     return <div className="mt-5 p-4">
 
@@ -114,7 +127,6 @@ export const Cart = () => {
                             navigate('/placeOrder');
                         } else {
                           setLoginPopup(true);
-                          
                         }
                         
                     }}

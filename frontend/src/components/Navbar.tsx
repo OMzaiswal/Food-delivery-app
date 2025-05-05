@@ -70,7 +70,8 @@ export const Navbar = () => {
                             <div className="px-4 py-2 font-semibold text-gray-700 border-b">
                                 Hi, <b className="text-orange-500">{userLogin.fullName}</b>
                             </div>
-                            <button className="w-full text-left px-4 py-1 hover:bg-gray-100">Profile</button>
+                            {/* commented profile option for now, might add later */}
+                            {/* <button className="w-full text-left px-4 py-1 hover:bg-gray-100">Profile</button> */}
                             <button 
                                 className="w-full text-left px-4 py-1 hover:bg-gray-100"
                                 onClick={() => navigate('/orders')}
@@ -83,7 +84,7 @@ export const Navbar = () => {
                                     try {
                                         const res = await api.post('/user/logout')
                                         if (res.status === 200) {
-                                            setUserLogin({ isLoggedIn: false, role: null, fullName: null });
+                                            setUserLogin({ isLoggedIn: false, role: null, fullName: null, email: null });
                                             setCartItems({});
                                             toast.success('Logged out successfully');
                                         } 
