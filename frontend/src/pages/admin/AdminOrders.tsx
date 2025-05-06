@@ -69,7 +69,7 @@ export const AdminOrders = () => {
                 <p className="text-center">View</p>
             </div>
             <div>
-                {orders.map((order: any) => (
+                {orders.map((order: Order) => (
                     <div key={order.id} 
                         className="grid grid-cols-5 gap-4 text-sm font-semibold border border-gray-300 rounded-sm px-3 py-3 items-center"
                         >

@@ -19,6 +19,7 @@ import { useEffect } from 'react'
 import { api } from './api/axiosInstatnce'
 import { cartState } from './recoil/cartState'
 import { PaymentSuccess } from './pages/Payment-success'
+import { OrderDetails } from './pages/OrderDetails'
 
 const AppContent = () => {
     
@@ -28,8 +29,9 @@ const AppContent = () => {
   const setCartState = useSetRecoilState(cartState);
 
   interface LoginResponse {
-    message: string | null
+    message:  string | null
     fullName: string | null
+    email:    string | null
     cart: {}
 }
 
@@ -41,7 +43,8 @@ const AppContent = () => {
           setLoginState({
             isLoggedIn: true,
             role: 'user',
-            fullName: res.data.fullName
+            fullName: res.data.fullName,
+            email: res.data.email
           })
           setCartState(res.data.cart);
           // toast.success(`Welcome back Mr. ${res.data.fullName}`)
@@ -63,6 +66,7 @@ const AppContent = () => {
           <Route path='/placeOrder' element={<PlaceOrder />}></Route>
           <Route path='payment-success' element={<PaymentSuccess />}></Route>
           <Route path='/orders' element={<Orders />}></Route>
+          <Route path='/order-details/:orderId' element={<OrderDetails />}></Route>
           <Route path='/admin' element={<AdminLayout />}>
             <Route path='add-food' element={<AddFood />}></Route>
             <Route path='list-items' element={<ListItems />}></Route>

@@ -86,6 +86,7 @@ export const Navbar = () => {
                                         if (res.status === 200) {
                                             setUserLogin({ isLoggedIn: false, role: null, fullName: null, email: null });
                                             setCartItems({});
+                                            navigate('/');
                                             toast.success('Logged out successfully');
                                         } 
                                     } catch (err) {
