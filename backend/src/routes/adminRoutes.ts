@@ -117,7 +117,7 @@ router.patch('/order/:orderId/status', async (req, res) => {
             data: { status: newStatus }
         });
 
-        res.status(200).json({ message: "Order status updated successfully", updatedOrder });
+        res.status(200).json({ message: "Order status updated successfully" });
         return;
 
     } catch (err) {

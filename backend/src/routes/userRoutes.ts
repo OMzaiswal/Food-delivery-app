@@ -243,5 +243,36 @@ router.post('/create-checkout-session', async (req, res) => {
     }
 })
 
+router.get('/orders', async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const orders = await prisma.order.findMany({ 
+            where: { userId },
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                createdAt: true,
+                totalPrice: true,
+                status: true,
+                items: {
+                    select: { id: true }
+                }
+            }
+        });
+        const OrdersData = orders.map(order => ({
+            id: order.id,
+            createdAt: order.createdAt,
+            totalPrice: order.totalPrice,
+            status: order.status,
+            itemCount: order.items.length
+        }))
+        res.status(200).json(OrdersData);
+        return;
+    } catch(err) {
+        res.status(500).json({ message: 'Failed to fetch orders'});
+        return;
+    }
+})
+
 
 export default router;
