@@ -152,7 +152,7 @@ router.get('/auth/me', async (req, res) => {
         user?.cart?.items.forEach(item => {
             cart[item.foodItemId] = item.quantity;
         })
-        res.status(200).json({ message: 'User is logged in', fullName: user?.fullName, cart });
+        res.status(200).json({ message: 'User is logged in', fullName: user?.fullName, email: user?.email, cart });
         return;
     } catch (err) {
         res.status(500).json({message: 'Something went wrong'});
@@ -270,6 +270,34 @@ router.get('/orders', async (req, res) => {
         return;
     } catch(err) {
         res.status(500).json({ message: 'Failed to fetch orders'});
+        return;
+    }
+})
+
+router.get('/order/:orderId', async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const { orderId } = req.params
+
+        const orderDetail = await prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                items: {
+                    include: { foodItem: true }
+                },
+                payment: true,
+                delivery: true
+            }
+        })
+
+        if (!orderDetail || orderDetail.userId !== userId) {
+            res.status(404).json({ message: 'Order not found' });
+            return;
+        }
+
+
+    } catch(err) {
+        res.status(500).json({ message: 'Failed to fetch order details' });
         return;
     }
 })

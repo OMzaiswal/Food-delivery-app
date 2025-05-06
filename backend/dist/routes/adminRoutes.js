@@ -109,7 +109,7 @@ router.patch('/order/:orderId/status', (req, res) => __awaiter(void 0, void 0, v
             where: { id: orderId },
             data: { status: newStatus }
         });
-        res.status(200).json({ message: "Order status updated successfully", updatedOrder });
+        res.status(200).json({ message: "Order status updated successfully" });
         return;
     }
     catch (err) {

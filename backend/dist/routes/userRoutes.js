@@ -145,7 +145,7 @@ router.get('/auth/me', (req, res) => __awaiter(void 0, void 0, void 0, function*
         (_c = user === null || user === void 0 ? void 0 : user.cart) === null || _c === void 0 ? void 0 : _c.items.forEach(item => {
             cart[item.foodItemId] = item.quantity;
         });
-        res.status(200).json({ message: 'User is logged in', fullName: user === null || user === void 0 ? void 0 : user.fullName, cart });
+        res.status(200).json({ message: 'User is logged in', fullName: user === null || user === void 0 ? void 0 : user.fullName, email: user === null || user === void 0 ? void 0 : user.email, cart });
         return;
     }
     catch (err) {
@@ -224,6 +224,63 @@ router.post('/create-checkout-session', (req, res) => __awaiter(void 0, void 0, 
     catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Something went wrong!!!' });
+        return;
+    }
+}));
+router.get('/orders', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _e;
+    try {
+        const userId = (_e = req.user) === null || _e === void 0 ? void 0 : _e.id;
+        const orders = yield prismaClient_1.default.order.findMany({
+            where: { userId },
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                createdAt: true,
+                totalPrice: true,
+                status: true,
+                items: {
+                    select: { id: true }
+                }
+            }
+        });
+        const OrdersData = orders.map(order => ({
+            id: order.id,
+            createdAt: order.createdAt,
+            totalPrice: order.totalPrice,
+            status: order.status,
+            itemCount: order.items.length
+        }));
+        res.status(200).json(OrdersData);
+        return;
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Failed to fetch orders' });
+        return;
+    }
+}));
+router.get('/order/:orderId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _f;
+    try {
+        const userId = (_f = req.user) === null || _f === void 0 ? void 0 : _f.id;
+        const { orderId } = req.params;
+        const orderDetail = yield prismaClient_1.default.order.findUnique({
+            where: { id: orderId },
+            include: {
+                items: {
+                    include: { foodItem: true }
+                },
+                payment: true,
+                delivery: true
+            }
+        });
+        if (!orderDetail || orderDetail.userId !== userId) {
+            res.status(404).json({ message: 'Order not found' });
+            return;
+        }
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Failed to fetch order details' });
         return;
     }
 }));
