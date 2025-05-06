@@ -278,6 +278,8 @@ router.get('/order/:orderId', (req, res) => __awaiter(void 0, void 0, void 0, fu
             res.status(404).json({ message: 'Order not found' });
             return;
         }
+        res.status(200).json(orderDetail);
+        return;
     }
     catch (err) {
         res.status(500).json({ message: 'Failed to fetch order details' });

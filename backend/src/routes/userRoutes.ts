@@ -294,6 +294,8 @@ router.get('/order/:orderId', async (req, res) => {
             res.status(404).json({ message: 'Order not found' });
             return;
         }
+        res.status(200).json(orderDetail);
+        return;
 
 
     } catch(err) {
