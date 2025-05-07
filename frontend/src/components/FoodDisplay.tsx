@@ -1,5 +1,4 @@
 import { useRecoilValue } from "recoil";
-// import { food_list } from "../assets/assets";
 import { FoodItemCard } from "./FoodItemCard";
 import { foodCategoryState } from "../recoil/foodCategoryState";
 import { foodList } from "../recoil/foodList";
