@@ -1,14 +1,27 @@
 // src/firebase.ts
-import { initializeApp, cert } from 'firebase-admin/app';
+import { initializeApp, cert, applicationDefault, AppOptions } from 'firebase-admin/app';
 import { getStorage } from 'firebase-admin/storage';
 import * as admin from 'firebase-admin';
 import * as path from 'path';
 
-const serviceAccount = require(path.resolve(__dirname, 'food-delivery-app-serviceAccountKey.json'));
+let appOptions: AppOptions;
 
-initializeApp({
-  credential: cert(serviceAccount),
-  storageBucket: 'food-delivery-app-39717.firebasestorage.app',
-});
+if (process.env.NODE_ENV === 'production') {
+  // Parse service account JSON from environment variable in prod
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
+  appOptions = {
+    credential: cert(serviceAccount),
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  };
+} else {
+  // Use local service account key JSON in development
+  const serviceAccount = require(path.resolve(__dirname, 'food-delivery-app-serviceAccountKey.json'));
+  appOptions = {
+    credential: cert(serviceAccount),
+    storageBucket: 'food-delivery-app-39717.appspot.com',
+  };
+}
 
+initializeApp(appOptions);
 export const bucket = getStorage().bucket();
+
