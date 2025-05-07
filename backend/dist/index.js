@@ -50,7 +50,7 @@ const PORT = 3000;
 app.use((0, body_parser_1.json)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:5173',
+    origin: process.env.CLIENT_URL,
     credentials: true
 }));
 app.get('/foodList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

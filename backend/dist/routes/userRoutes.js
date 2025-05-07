@@ -20,6 +20,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const stripe_1 = __importDefault(require("stripe"));
 const router = (0, express_1.Router)();
 const SECRET_KEY = process.env.JWT_SECRET;
+const baseUrl = process.env.CLIENT_URL;
 const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-02-24.acacia' });
 if (!SECRET_KEY) {
     throw new Error('JWT_SECRET_KEY is not set in the environment variables!');
@@ -215,8 +216,8 @@ router.post('/create-checkout-session', (req, res) => __awaiter(void 0, void 0, 
                     quantity: 1
                 }
             ],
-            success_url: 'http://localhost:5173/payment-success',
-            cancel_url: 'http://localhost:5173/payment-cancelled',
+            success_url: `${baseUrl}/payment-success`,
+            cancel_url: `${baseUrl}/payment-cancelled`,
         });
         res.send({ url: session.url });
         return;

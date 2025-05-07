@@ -8,6 +8,7 @@ import Stripe from "stripe";
 const router = Router();
 
 const SECRET_KEY = process.env.JWT_SECRET;
+const baseUrl = process.env.CLIENT_URL;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-02-24.acacia'})
 
@@ -231,8 +232,8 @@ router.post('/create-checkout-session', async (req, res) => {
                     quantity: 1
                 }
             ],
-            success_url: 'http://localhost:5173/payment-success',
-            cancel_url: 'http://localhost:5173/payment-cancelled',
+            success_url: `${baseUrl}/payment-success`,
+            cancel_url: `${baseUrl}/payment-cancelled`,
         })
         res.send({ url: session.url });
         return;
