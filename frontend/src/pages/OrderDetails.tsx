@@ -7,25 +7,6 @@ export const OrderDetails = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState<any>();
 
-    // type Order = {
-    //     id: string;
-    //     items: [];
-    //     totalPrice: string;
-    //     status: string;
-    //     pa
-    // }
-
-    // id          String      @id @default(cuid())
-    // user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-    // userId      String
-    // items       OrderItem[]
-    // totalPrice  Decimal
-    // status      OrderStatus @default(PENDING)
-    // payment     Payment?
-    // delivery    Delivery?
-    // createdAt   DateTime    @default(now())
-    // updatedAt   DateTime    @updatedAt
-
     useEffect(() => {
         const fetchDetails = async () => {
             try {

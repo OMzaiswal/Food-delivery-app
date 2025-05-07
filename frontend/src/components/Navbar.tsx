@@ -12,7 +12,6 @@ import { api } from "../api/axiosInstatnce";
 export const Navbar = () => {
 
     const [userLogin, setUserLogin] = useRecoilState(loginState);
-
     const CartSyncWrapper = (): JSX.Element | null => {
         useCartSync();
         return null;
@@ -49,7 +48,19 @@ export const Navbar = () => {
                 ))}
             </div>
             <div className="flex space-x-8">
-                <img className="h-8 w-8" src="/search_icon.png" alt="" />
+                {/* just removed search food for now, would add it later */}
+                {/* <div className="flex items-center border-b border-gray-400 px-2">
+                    <img 
+                        className="h-5 w-5 mr-2" 
+                        src="/search_icon.png" 
+                        alt="search" 
+                        />
+                    <input 
+                        type="text" 
+                        placeholder="Search food..."
+                        className="focus:outline-none placeholder-gray-500 text-gray-800 w-full"
+                    />
+                </div> */}
                 <div className="relative cursor-pointer" onClick={() => navigate('/cart')}>
                     <img 
                         className="h-8 w-8" 

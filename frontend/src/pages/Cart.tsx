@@ -93,7 +93,7 @@ export const Cart = () => {
                         </div>
                         <div>${product.price * quantity}</div>
                         <button 
-                            className="text-start hover:text-red-400 hover:cursor-pointer"
+                            className="text-center hover:cursor-pointer border rounded-md bg-red-400 text-white py-2 mx-8 hover:scale-105"
                             onClick={() => handleRemove(id)}
                             >Remove</button>
                     </div>
