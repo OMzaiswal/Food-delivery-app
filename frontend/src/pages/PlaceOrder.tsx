@@ -107,9 +107,9 @@ export const PlaceOrder = () => {
                     onClick={handleCheckout}
                 >PROCEED TO PAYMENT</button>
             </div>
-            <div className="text-red-500 text-md">
-               ( Note: please put card number 4242 4242 4242 4242 for successfull payment
-                for other fields, you can put any fake data )
+            <div className="text-red-500 text-md mt-2">
+               ( Note: please put card number 4242 4242 4242 4242 for successfull payment. 
+                For other fields, you can put any fake data )
             </div>
     </div>
     </div>
