@@ -51,7 +51,7 @@ export const Orders = () => {
                     </span>
                     <p className="text-center">{new Date(order.createdAt).toString()}</p>
                     <p className="text-center">{order.itemCount}</p>
-                    <p className="text-center">{order.totalPrice}</p>
+                    <p className="text-center">${order.totalPrice}</p>
                     <p className="text-center">{order.status}</p>
                     <button 
                         className="text-center bg-green-600 text-white border rounded-md px-2 py-2 mx-5 hover:scale-105"
