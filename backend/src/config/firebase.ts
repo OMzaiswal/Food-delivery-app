@@ -8,7 +8,10 @@ let appOptions: AppOptions;
 
 if (process.env.NODE_ENV === 'production') {
   // Parse service account JSON from environment variable in prod
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT as string);
+  // const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT as string);
+  // Decode and parse Base64-encoded service account JSON from env
+  const decoded = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT as string, 'base64').toString('utf8');
+  const serviceAccount = JSON.parse(decoded);
   appOptions = {
     credential: cert(serviceAccount),
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
