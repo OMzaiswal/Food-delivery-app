@@ -15,8 +15,19 @@ const PORT = 3000;
 
 app.use(json());
 app.use(cookieParser());
+
+const allowedOrigins = [
+  'https://hungerbox.online',
+  'https://www.hungerbox.online'
+];
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
     credentials: true
 }))
 
