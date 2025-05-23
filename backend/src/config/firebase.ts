@@ -37,7 +37,7 @@ const serviceAccount = JSON.parse(
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "uparkom-grlab.firebasestorage.app",
+  storageBucket: "food-delivery-app-39717.firebasestorage.app",
 });
 
 const bucket = admin.storage().bucket();
