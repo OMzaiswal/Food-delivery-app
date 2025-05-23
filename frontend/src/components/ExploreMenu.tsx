@@ -21,7 +21,7 @@ export const ExploreMenu = () => {
                             src={item.menu_image} alt={item.menu_name}
                             onClick={() => setCategory(item.menu_value)}
                             className={`cursor-pointer border-4 rounded-full p-0.5 transition-all w-32 h-32
-                            ${selectedCategory === item.menu_name ? "border-red-500 shadow-lg" : "border-transparent"}`} 
+                            ${selectedCategory === item.menu_value ? "border-red-500 shadow-lg" : "border-transparent"}`} 
                             />
                             <p className="text-center pt-2">{item.menu_name}</p>
                         </div>
