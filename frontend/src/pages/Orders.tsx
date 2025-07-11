@@ -30,7 +30,7 @@ export const Orders = () => {
         fetchOrders();
     }, [])
 
-    return <div className="h-screen mt-4">
+    return <div className="min-h-screen mt-4">
         <h1 className="text-2xl mb-3 pl-5">Your Orders</h1>
         <div>
         <div className="grid grid-cols-6 gap-4 text-md font-semibold border-b border-gray-300 items-center text-orange-400 pb-1">
