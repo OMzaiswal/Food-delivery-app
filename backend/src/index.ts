@@ -16,10 +16,11 @@ const PORT = 3000;
 app.use(json());
 app.use(cookieParser());
 
-const allowedOrigins = [
-  'https://hungerbox.online',
-  'https://www.hungerbox.online'
-];
+const devOrigions = ['http://localhost:5173']
+const prodOrigins = ['https://hungerbox.online','https://www.hungerbox.online'];
+
+const allowedOrigins = process.env.NODE_ENV === 'production' ? prodOrigins : devOrigions;
+
 app.use(cors({
     origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
