@@ -18,6 +18,7 @@ export const LoginPopup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullname] = useState('');
+    const [loading, setLoading] = useState(false);
 
     interface LoginResponse {
         message: string | null
@@ -33,6 +34,8 @@ export const LoginPopup = () => {
             toast.warn('All fields are required!!!');
             return;
         }
+
+        setLoading(true)
 
         try {
             if (currentState === 'Log in') {
@@ -67,6 +70,8 @@ export const LoginPopup = () => {
             } else {
                 toast.error('Something went wrong, Try again!');
             }
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -123,11 +128,18 @@ export const LoginPopup = () => {
                     </div>
                     <button
                     className={`w-full p-2 border border-gray-400 rounded-md 
-                        ${agree ? 'bg-red-400 text-white hover:bg-red-600' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+                        ${agree ? 'bg-red-400 text-white hover:bg-red-600 active:bg-red-800' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
                         disabled={!agree}
                         type="submit"
                     >
-                        {currentState}
+                        {loading ? (
+                            <svg className="animate-spin h-5 w-5 mx-auto text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                          </svg>
+                        ) : (
+                            currentState
+                        )}
                     </button>
                 </form>
                 <p className="text-sm text-center mt-3 text-gray-600">
