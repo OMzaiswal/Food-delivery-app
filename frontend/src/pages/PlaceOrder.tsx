@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { loginState } from "../recoil/loginState";
 import { useState } from "react";
 
-export const PlaceOrder = () => {
+const PlaceOrder = () => {
 
     const userDetails = useRecoilValue(loginState);
     const subtotal = useRecoilValue(cartSubtotal);
@@ -128,3 +128,5 @@ export const PlaceOrder = () => {
     </div>
     </div>
 }
+
+export default PlaceOrder;

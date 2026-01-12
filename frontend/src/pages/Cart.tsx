@@ -7,7 +7,7 @@ import { foodList } from "../recoil/foodList";
 import { userLoginSelector } from "../recoil/userLoginSelector";
 import { showLoginPopup } from "../recoil/showLoginPopup";
 
-export const Cart = () => {
+const Cart = () => {
 
     const foodListState = useRecoilValue(foodList);
     const isLoggedIn = useRecoilValue(userLoginSelector);
@@ -142,5 +142,7 @@ export const Cart = () => {
         </div>
     </div>
 }
+
+export default Cart;
 
 

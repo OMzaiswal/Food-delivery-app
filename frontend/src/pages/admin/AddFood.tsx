@@ -3,7 +3,7 @@ import { api } from "../../api/axiosInstatnce";
 import { toast } from "react-toastify";
 import { Loader } from 'lucide-react';
 
-export const AddFood = () => {
+const AddFood = () => {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -130,3 +130,5 @@ export const AddFood = () => {
         </div>
     </div>
 }
+
+export default AddFood;

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { api } from "../api/axiosInstatnce";
 import { toast } from "react-toastify";
 
-export const OrderDetails = () => {
+const OrderDetails = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState<any>();
 
@@ -67,3 +67,5 @@ export const OrderDetails = () => {
         
     </div>
 }
+
+export default OrderDetails;

@@ -3,7 +3,7 @@ import { api } from "../../api/axiosInstatnce";
 import { toast } from "react-toastify";
 
 
-export const AdminOrders = () => {
+const AdminOrders = () => {
 
       const statusOptions = [
         "PENDING",
@@ -94,3 +94,5 @@ export const AdminOrders = () => {
         </div>
     </div>
 }
+
+export default AdminOrders;

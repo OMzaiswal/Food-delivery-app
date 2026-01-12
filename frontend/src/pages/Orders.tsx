@@ -3,7 +3,7 @@ import { api } from "../api/axiosInstatnce"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
-export const Orders = () => {
+const Orders = () => {
 
     type Order = {
         id: string,
@@ -66,3 +66,5 @@ export const Orders = () => {
         </div>
     </div>
 }
+
+export default Orders;

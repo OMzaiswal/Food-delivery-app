@@ -4,7 +4,7 @@ import { api } from "../api/axiosInstatnce"
 import { useSetRecoilState } from "recoil"
 import { cartState } from "../recoil/cartState"
 
-export const PaymentSuccess = () => {
+const PaymentSuccess = () => {
 
     const setCartState = useSetRecoilState(cartState);
 
@@ -37,3 +37,5 @@ export const PaymentSuccess = () => {
         </div>
     )
 }
+
+export default PaymentSuccess;

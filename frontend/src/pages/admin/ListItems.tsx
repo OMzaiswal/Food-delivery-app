@@ -3,7 +3,7 @@ import { api } from "../../api/axiosInstatnce";
 import { toast } from "react-toastify";
 
 
-export const ListItems = () => {
+const ListItems = () => {
 
     interface FoodItem {
         id: string;
@@ -79,3 +79,5 @@ export const ListItems = () => {
         </div>
     </div>
 }
+
+export default ListItems;
