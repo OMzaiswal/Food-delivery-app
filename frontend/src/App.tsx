@@ -11,6 +11,7 @@ import { useSetRecoilState } from 'recoil'
 import { loginState } from './recoil/loginState'
 import { api } from './api/axiosInstatnce'
 import { cartState } from './recoil/cartState'
+import { Loading } from './components/Loading'
 const Cart = lazy(() => import('./pages/Cart'))
 const PlaceOrder = lazy(() => import('./pages/PlaceOrder')) 
 const PaymentSuccess = lazy(() => import('./pages/Payment-success')) 
@@ -60,7 +61,7 @@ const AppContent = () => {
         <LoginPopup />
         { !isAdminPage && location.pathname !== '/payment-success' && <Navbar /> }
         <ToastContainer position='top-right' autoClose={3000} />
-        <Suspense fallback={<p><i>Loading...</i></p>}>
+        <Suspense fallback={ <Loading /> }>
           <Routes>
             <Route path='/' element={<Home />}></Route>
             <Route path='/cart' element={<Cart />}/>
