@@ -85,7 +85,8 @@ app.get('/foodList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const end = performance.now();
         res.set({
             'X-Cache': 'MISS',
-            'X-Response-Time': `${(end - start).toFixed(2)}ms`
+            'X-Response-Time': `${(end - start).toFixed(2)}ms`,
+            'Cache-Control': 'public, max-age=300, s-maxage=600, stale-while-revalidate=300'
         });
         // console.log('MISSS')
         res.status(200).json(foodList);
