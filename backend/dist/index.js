@@ -44,6 +44,8 @@ const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const cartRoutes_1 = __importDefault(require("./routes/cartRoutes"));
 const prismaClient_1 = __importStar(require("./lib/prismaClient"));
+const redis_1 = require("./upstash/redis");
+const cacheKey_1 = require("./constants/cacheKey");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = 3000;
@@ -64,13 +66,35 @@ app.use((0, cors_1.default)({
     credentials: true
 }));
 app.get('/foodList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log('gfgfiygkhgkj')
+    const start = performance.now();
     try {
+        const cachedFood = yield redis_1.redis.get(cacheKey_1.CACHE_KEYs.FOOD_LIST);
+        if (cachedFood) {
+            const end = performance.now();
+            res.set({
+                'X-Cache': 'HIT',
+                'X-Response-Time': `${(end - start).toFixed(2)}ms`
+            });
+            // console.log('HITTTT')
+            res.status(200).json(cachedFood);
+            return;
+        }
         const foodList = yield prismaClient_1.default.foodItem.findMany();
+        yield redis_1.redis.set(cacheKey_1.CACHE_KEYs.FOOD_LIST, foodList, { ex: 86400 });
+        const end = performance.now();
+        res.set({
+            'X-Cache': 'MISS',
+            'X-Response-Time': `${(end - start).toFixed(2)}ms`
+        });
+        // console.log('MISSS')
         res.status(200).json(foodList);
+        return;
     }
     catch (err) {
-        console.error(err);
+        // console.error(err);
         res.status(500).json({ message: "Internal server error" });
+        return;
     }
 }));
 app.use('/admin', adminRoutes_1.default);

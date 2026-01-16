@@ -7,6 +7,8 @@ import adminRoutes from './routes/adminRoutes';
 import userRoute from './routes/userRoutes';
 import cartRoutes from './routes/cartRoutes';
 import prisma, { safeConnectPrisma } from './lib/prismaClient';
+import { redis } from './upstash/redis';
+import { CACHE_KEYs } from './constants/cacheKey';
 
 dotenv.config()
 
@@ -33,13 +35,35 @@ app.use(cors({
 }))
 
 app.get('/foodList', async (req, res) => {
-    try {
-        const foodList = await prisma.foodItem.findMany();
-        res.status(200).json(foodList);
-    } catch(err) {
-        console.error(err);
-        res.status(500).json({message: "Internal server error"});
+  // console.log('gfgfiygkhgkj')
+  const start = performance.now()
+  try {
+    const cachedFood = await redis.get(CACHE_KEYs.FOOD_LIST);
+    if (cachedFood) {
+      const end = performance.now();
+      res.set({
+        'X-Cache': 'HIT',
+        'X-Response-Time': `${(end - start).toFixed(2)}ms`
+      });
+      // console.log('HITTTT')
+      res.status(200).json(cachedFood);
+      return;
     }
+      const foodList = await prisma.foodItem.findMany();
+      await redis.set(CACHE_KEYs.FOOD_LIST, foodList, { ex: 86400 });
+      const end = performance.now();
+      res.set({
+        'X-Cache': 'MISS',
+        'X-Response-Time': `${(end - start).toFixed(2)}ms`
+      })
+      // console.log('MISSS')
+      res.status(200).json(foodList);
+      return;
+  } catch(err) {
+      // console.error(err);
+      res.status(500).json({message: "Internal server error"});
+      return;
+  }
 })
 
 
